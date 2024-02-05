@@ -76,13 +76,18 @@ userSchema.methods = {
 
   generatePasswordResetToken : async function (){
     const resetToken = crypto.randomBytes(20).toString("hex")
+    this.foregtPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex")
+    this.forgetPasswordExpiryDate = Date.now() + 15 * 60 * 1000
 
-    this.foregtPasswordToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex")
+    return resetToken
+    // const resetToken = crypto.randomBytes(20).toString("hex")
 
-    this.forgetPasswordExpiryDate = Date.now() + 15*60*1000  // for next 15 min
+    // this.foregtPasswordToken = crypto
+    // .createHash("sha256")
+    // .update(resetToken)
+    // .digest("hex")
+
+    // this.forgetPasswordExpiryDate = Date.now() + 15*60*1000  // for next 15 min
   }
 };
 export const userModel = model("User", userSchema);
