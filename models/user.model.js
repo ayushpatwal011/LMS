@@ -39,9 +39,9 @@ const userSchema = Schema(
       default: "USER",
     },
 
-    foregtPasswordToken: String,
+    forgetPasswordToken: String,
 
-    forgetPasswordExpiryDate: String,
+    forgetPasswordExpiry : String,
   },
   { timestamps: true }
 );
@@ -76,18 +76,11 @@ userSchema.methods = {
 
   generatePasswordResetToken : async function (){
     const resetToken = crypto.randomBytes(20).toString("hex")
-    this.foregtPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex")
-    this.forgetPasswordExpiryDate = Date.now() + 15 * 60 * 1000
+    this.forgetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex")
+    this.forgetPasswordExpiry = Date.now() + 15 * 60 * 1000
 
-    return resetToken
-    // const resetToken = crypto.randomBytes(20).toString("hex")
+    return resetToken 
 
-    // this.foregtPasswordToken = crypto
-    // .createHash("sha256")
-    // .update(resetToken)
-    // .digest("hex")
-
-    // this.forgetPasswordExpiryDate = Date.now() + 15*60*1000  // for next 15 min
   }
 };
 export const userModel = model("User", userSchema);

@@ -1,6 +1,6 @@
 import express from "express"
 export const Router = express.Router()
-import { register , login, logout, myprofile, resetPassword, foregtPassword } from "../controllers/user.controller.js"
+import { register , login, logout, myprofile, resetPassword, forgetPassword } from "../controllers/user.controller.js"
 import {islogin} from "../middlewares/isLogin.js"
 import { upload } from "../middlewares/multer.js"
 
@@ -17,10 +17,10 @@ Router.route("/logout")
 Router.route("/myprofile")
     .get( islogin ,  myprofile)
 
-Router.route("/forget-password")
-    .get(  foregtPassword)
+Router.route("/reset")
+    .get(  forgetPassword)
 
-Router.route("/reset-password")
+Router.route("/reset/:resetToken")
     .get( resetPassword)
 
 

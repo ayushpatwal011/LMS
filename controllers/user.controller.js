@@ -6,6 +6,7 @@ import fs from "fs/promises"
 import cloudinary from "cloudinary"
 import { sendEmail } from "../utilittes/sendEmail.js";
 import { log } from "console";
+import crypto from "crypto"
 
 export const register = asyncHandler(async (req,res,next)=>{
 
@@ -104,8 +105,8 @@ export const myprofile = asyncHandler(async (req,res,next)=>{
     })
 })
 
-export const foregtPassword = asyncHandler(async (req,res,next)=>{
-    const email = req.body.email
+export const forgetPassword = asyncHandler(async (req,res,next)=>{
+    const {email} = req.body
     if(!email){return next(new AppError("Email is required",400))}
 
     const user = await userModel.findOne({email})
@@ -129,8 +130,8 @@ export const foregtPassword = asyncHandler(async (req,res,next)=>{
                 message : `Reset password link has been send to ${email} successfully`
             })
         } catch (e) {
-            user.foregtPasswordExpiry = undefined
-            user.foregtPasswordToken = undefined
+            user.forgetPasswordExpiry = undefined
+            user.forgetPasswordToken = undefined
 
             await user.save()
             return next(new AppError(e.message , 500))
@@ -138,6 +139,29 @@ export const foregtPassword = asyncHandler(async (req,res,next)=>{
     })
 
 export const resetPassword = asyncHandler(async (req,res,next)=>{
+    const {resetToken} = req.params;
+    const {password} = req.body
+    if(!password){ return next(new AppError("Enter your new password" , 400))}
 
-})
+    const forgetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex")
 
+    const user = await userModel.findOne(
+    { forgetPasswordToken,
+    forgetPasswordExpiry:{$gt : Date.now()} })
+    
+    if(!user){
+    return next(new AppError("Link is invalid of expired, please try again" , 400))}
+
+    user.password =  password;
+    user.forgetPasswordExpiry = undefined
+    user.forgetPasswordToken = undefined
+
+    user.save();
+
+    res.status(200).json({
+    success:true,
+    message:"Pasword change Successfully"})
+    })
