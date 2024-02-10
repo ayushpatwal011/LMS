@@ -5,7 +5,7 @@ import fs from "fs/promises"
 import cloudinary from "cloudinary"
 
 export const getAllCourses = asyncHandler( async(req,res,next)=>{
-    const courses = await courseSchema.find({}).select("-lecture")
+    const courses = await courseModel.find({ }).select("-lecture")
     if(!courses){
         next(new AppError("No Course found Now", 400))
     }
@@ -28,48 +28,51 @@ export const getLectureByCourseId = asyncHandler( async (req,res,next)=>{
     res.status(200).json({
         success:true,
         message:"Course leacture fetched Successfully",
-        lectures:course.leacture
+        lectures:course.lecture
     })
 
 })
 
 export const createCourse = asyncHandler( async (req,res,next)=>{
-    const { title , description , catagory , createdby } = req.body
-    // if(!title || !description || !catagory || !createdby ){
-    //     next(new AppError("All feilds are require",400))
-    // }
-    // const course = await courseModel.create({
-    //     title,
-    //     description,
-    //     catagory,
-    //     createdby,
-    //     thumbnial:{
-    //     public_id:"temp",
-    //     secure_url:"temp"
-    // }})
-    // if(!course){
-    //     next(new AppError("Course is not created, Try again",400))
-    // }
-    // if(req.file){
-    //     const result = await cloudinary.v2.upload(req.file.path, {
-    //         folder : "LMS"
-    //     })
-    // }
-    // if(result){
-    //     course.thumbnial.public_id = result.public_id
-    //     course.thumbnial.secure_url = result.secure_url
-    // }
-    // console.log(JSON.stringify(result))
+//     const { title , description , category , createdBy } = req.body
+//     if(!title || !description || !category || !createdBy ){
+//         next(new AppError("All feilds are require",400))
+//     }
+//     const course = await courseModel.create({
+//         title,
+//         description,
+//         category,
+//         createdBy,
+//         thumbnial:{
+//         public_id:"temp",
+//         secure_url:"temp"
+//     }})
+//     if(!course){
+//         next(new AppError("Course is not created, Try again",400))
+//     }
 
-    // fs.rm(`uploads/${req.file.filename}`)
+//     const file = req.file
+//     if(file){
+//         const result = await cloudinary.v2.uploader.upload(req.file.path, {
+//                 folder: "LMS",
+//         })
+        
+//     }
+//     if(result){
+//         course.thumbnial.public_id = result.public_id
+//         course.thumbnial.secure_url = result.secure_url
+//     }
+  
 
-    // course.save()
+//     fs.rm(`uploads/${req.file.filename}`)
 
-    res.status(200).json({
-        success:true,
-        message:"Course created Successfully",
-        lectures:course.leacture
-    })
+//     course.save()
+
+//     res.status(200).json({
+//         success:true,
+//         message:"Course created Successfully",
+//         lectures:course.lecture
+//     })
 })
 
 export const updateCoure = asyncHandler( async (req,res,next)=>{

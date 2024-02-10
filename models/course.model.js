@@ -1,6 +1,6 @@
 import {model , Schema} from "mongoose"
 
-export const courseModel = new Schema({
+ const courseSchema = new Schema({
     title:{
         type:String,
         require:true,
@@ -52,3 +52,5 @@ export const courseModel = new Schema({
         require:[true,"Enter the name of creater"]
     }
 },{timestamps : true})
+
+export const courseModel = model("Course", courseSchema);
